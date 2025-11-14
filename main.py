@@ -287,6 +287,7 @@ def process_file(
     if plot:
         plot_3d(df, filename=csv_file, arrow_scale=0.05)
         df['lattice'] = 1  # TODO we could leave it, emClarity ignores it anyway
+        df[df['class'] == -1] = 1  # reset flipped particles
 
     # remove cleaned-out particles from the csv
     df.drop(df[df['class'] == -9999].index, inplace=True)
