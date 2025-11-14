@@ -46,7 +46,7 @@ def plot_3d(df: pd.DataFrame, filename: Path, arrow_scale: float = 0.05):
     # color good particles by their lattice id
     unique_lattices = np.sort(np.abs(particles_good['lattice'].unique()))
     n_colors = len(unique_lattices)
-    cmap = plt.cm.get_cmap('tab20', n_colors)
+    cmap = plt.colormaps['tab20'].resampled(n_colors)
     class_to_cmap_index = {int(lid): i for i, lid in enumerate(unique_lattices)}
     cmap_indices = particles_good['lattice'].map(class_to_cmap_index).to_numpy(dtype=int)
 
