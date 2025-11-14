@@ -44,7 +44,7 @@ def plot_3d(df: pd.DataFrame, filename: Path, arrow_scale: float = 0.05):
     orientations_flipped = extract_orientations(particles_flipped, True)
 
     # color good particles by their lattice id
-    unique_lattices = np.sort(np.abs(particles_good['lattice'].unique()))
+    unique_lattices = np.sort(particles_good['lattice'].unique())
     n_colors = len(unique_lattices)
     cmap = plt.colormaps['tab20'].resampled(n_colors)
     class_to_cmap_index = {int(lid): i for i, lid in enumerate(unique_lattices)}
