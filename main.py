@@ -174,7 +174,8 @@ def clean_particles(
     orientation_matrix = np.clip(orientations @ orientations.T, -1.0, 1.0)
     if allow_flipped_particles:
         orientation_matrix = np.abs(orientation_matrix)
-    orientation_mask = (orientation_matrix >= min_orientation) & (orientation_matrix <= max_orientation)
+    orientation_mask = ((orientation_matrix >= min_orientation) &
+                        (orientation_matrix <= max_orientation))
 
     # create a mask for the distances within the specified range
     distance_matrix = positions[:, None, :] - positions[None, :, :]  # (n,n,3)
@@ -267,8 +268,6 @@ def process_file(
     min_curvature = np.sin(np.radians(-curvature_tolerance))
     max_curvature = np.sin(np.radians(+curvature_tolerance))
 
-    # returned class=0 means the particle is removed,
-    # and class >= 1 it's the lattice id for plotting
     df = clean_particles(
         df,
         min_distance,
