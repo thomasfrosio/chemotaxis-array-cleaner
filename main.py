@@ -74,7 +74,7 @@ def plot_3d(df: pd.DataFrame, filename: Path, arrow_scale: float = 0.05):
         length=arrow_scale, color='r', linewidth=0.5, arrow_length_ratio=0.1
     )
 
-    # Labels & view
+    # labels and view
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
@@ -100,6 +100,7 @@ def flip_particles(
     n_particles = len(positions)
 
     # compute sum of orientations per lattice (all lattices at once)
+    # TODO can this loop be easily vectorized?
     lattice_sums = np.zeros((n_lattices, 3))
     for dim in range(3):
         lattice_sums[:, dim] = np.bincount(
@@ -304,14 +305,14 @@ def main(
     min_distance: float = typer.Option(20, help='Min distance between particles, in unbinned pixels'),
     max_distance: float = typer.Option(120, help='Max distance between particles, in unbinned pixels'),
     angle_tolerance: float = typer.Option(40, help='Angle tolerance between particles, in degrees. Clamped between 0 to 90'),
-    allow_flipped_particles: bool = typer.Option(True, help='When filtering based on the angle tolerance, ignore whether the particles are up or down.'),
+    allow_flipped_particles: bool = typer.Option(True, help='When filtering based on the angle tolerance, ignore whether particles are up or down.'),
     curvature_tolerance: float = typer.Option(40, help='Curvature tolerance between particles, in degrees. Clamped between 0 to 90'),
     min_neighbours: int = typer.Option(3, help='Remove particles with less than this number of neighbours'),
     min_array_size: int = typer.Option(6, help='Remove lattices with less than this number of valid particles'),
-    flip_z: bool = typer.Option(False, help='Rotate particles 180° around their x-axis if facing opposite to lattice average orientation'),
+    flip_z: bool = typer.Option(False, help='Rotate particles 180 degrees around their x-axis if facing opposite to lattice average orientation'),
     plot: bool = typer.Option(False, help='Plot before saving the cleaned file'),
 ):
-    # Get the csv files, handling the shell expansion
+    # get the csv files, handling the shell expansion
     pattern_path = Path(csv_pattern)
     if pattern_path.exists() and pattern_path.is_file():
         csv_files = [str(pattern_path)]
@@ -322,7 +323,7 @@ def main(
         print(f'Error: No files found matching pattern: {csv_pattern}')
         raise typer.Exit(code=1)
 
-    # Process each file
+    # process each file
     for csv_file_str in csv_files:
         process_file(
             csv_file=Path(csv_file_str),
