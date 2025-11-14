@@ -116,7 +116,7 @@ def flip_particles(
     avg_orientations = avg_orientations_per_lattice[particles_lattice_id]
 
     # find flipped particles
-    dots = np.einsum('ij,ij->i', orientations, avg_orientations)
+    dots = np.sum(orientations * avg_orientations, axis=1)
     flipped_mask = (dots < 0) & particles_in_lattice
     flipped_indices = np.where(flipped_mask)[0]
 
@@ -189,7 +189,7 @@ def clean_particles(
     # the curvature is the dot product of the distance vector and the orientation vector of the neighbor
     norms = np.linalg.norm(distance_matrix, axis=-1, keepdims=True)
     distance_matrix_normalized = np.divide(distance_matrix, norms, out=np.zeros_like(distance_matrix), where=norms > 0)
-    curvature_matrix = np.einsum('ijk,jk->ij', distance_matrix_normalized, orientations)  # dot product
+    curvature_matrix = np.sum(distance_matrix_normalized * orientations[None, :, :], axis=-1)
     curvature_mask = ((curvature_matrix >= min_curvature) &
                       (curvature_matrix <= max_curvature))
 
